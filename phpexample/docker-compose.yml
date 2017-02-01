@@ -1,0 +1,19 @@
+version: '2'
+services:
+  front:
+    restart: always
+    build: ./docker/engine/
+    ports:
+      - 80
+    external_links:
+      - dockercompose_db_1:db
+      - dockercompose_maildev_1:maildev
+    volumes:
+      - .:/home/docker:rw
+      - ./docker/engine/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ./docker/front/apache.conf:/etc/apache2/conf-enabled/test.conf:ro
+      - ./docker/maildev/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro
+    working_dir: "/home/docker"
+    environment:
+      VIRTUAL_HOST: blackfire.localhost
+    network_mode: 'bridge'
